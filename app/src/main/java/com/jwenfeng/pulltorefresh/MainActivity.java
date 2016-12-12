@@ -1,41 +1,48 @@
 package com.jwenfeng.pulltorefresh;
 
-import android.os.Handler;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
-import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
-import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
-import com.jwenfeng.library.pulltorefresh.State;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-public class MainActivity extends AppCompatActivity {
+    private TextView lstv,recycler,web,scroll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final PullToRefreshLayout p = (PullToRefreshLayout) findViewById(R.id.activity_main);
-        p.setRefreshListener(new BaseRefreshListener() {
-            @Override
-            public void refresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        p.setFinish(State.REFRESH);
-                    }
-                },2000);
-            }
+        lstv = (TextView) findViewById(R.id.main_list_view);
+        recycler = (TextView) findViewById(R.id.main_recycler_view);
+        web = (TextView) findViewById(R.id.main_web_view);
+        scroll = (TextView) findViewById(R.id.main_scroll_view);
 
-            @Override
-            public void loadMore() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        p.setFinish(State.LOADMORE);
-                    }
-                },2000);
-            }
-        });
+        lstv.setOnClickListener(this);
+        recycler.setOnClickListener(this);
+        web.setOnClickListener(this);
+        scroll.setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.main_list_view:
+                startActivity(new Intent(this,ListActivity.class));
+                break;
+            case R.id.main_recycler_view:
+                startActivity(new Intent(this,RecyclerViewActivity.class));
+                break;
+            case R.id.main_scroll_view:
+                startActivity(new Intent(this,ScrollViewActivity.class));
+                break;
+            case R.id.main_web_view:
+                startActivity(new Intent(this,WebviewActivity.class));
+                break;
+        }
     }
 }

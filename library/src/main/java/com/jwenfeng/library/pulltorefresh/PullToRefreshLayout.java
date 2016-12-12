@@ -156,7 +156,7 @@ public class PullToRefreshLayout extends FrameLayout {
         switch (event.getAction()) {
             case MotionEvent.ACTION_MOVE:
                 mCurrentY = event.getY();
-                float dura = (mCurrentY - mTouchY)/4.0f;
+                float dura = (mCurrentY - mTouchY)/3.0f;
                 if (dura > 0 && canRefresh) {
                     dura = Math.min(head_height_2, dura);
                     dura = Math.max(0, dura);
@@ -178,7 +178,7 @@ public class PullToRefreshLayout extends FrameLayout {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 float currentY = event.getY();
-                final int dy1 = (int) (currentY - mTouchY)/4;
+                final int dy1 = (int) (currentY - mTouchY)/3;
                 if (dy1 > 0 && canRefresh) {
                     if (dy1 >= head_height) {
                         createAnimatorTranslationY(State.REFRESH,
