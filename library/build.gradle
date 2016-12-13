@@ -1,9 +1,10 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
+    signingConfigs {
+    }
+    compileSdkVersion 23
     buildToolsVersion "24.0.1"
-
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 25
@@ -22,7 +23,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -47,7 +48,7 @@ group = "com.jwenfeng.pulltorefresh"
 def libName = "PullToRefresh"
 // 版本号，下次更新是只需要更改版本号即可
 version = "1.0.0"
-/**  上面配置后上传至jcenter后的编译路径是这样的： compile 'cn.bluemobi.dylan:sqlitelibrary:1.0'  **/
+/**  上面配置后上传至jcenter后的编译路径是这样的： compile 'com.jwenfeng.pulltorefresh:library:1.0.0'  **/
 
 //生成源文件
 task sourcesJar(type: Jar) {
@@ -95,7 +96,7 @@ install {
                 licenses {
                     license {
                         name 'This is a pull-to-refresh framework for android'
-                        url 'https://github.com/linglongxin24/SQLite'
+                        url 'https://github.com/823546371/PullToRefresh'
                     }
                 }
                 developers {
@@ -125,7 +126,7 @@ bintray {
     pkg {
         repo = "maven"
         name = libName    //发布到JCenter上的项目名字，必须填写
-        desc = 'This is a lightweight SQLite database framework'    //项目描述
+        desc = 'This is a pull-to-refresh framework for android'    //项目描述
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
