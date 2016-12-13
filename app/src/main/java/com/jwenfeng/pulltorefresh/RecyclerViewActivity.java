@@ -44,7 +44,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        pullToRefreshLayout.setFinish(State.REFRESH);
+                        pullToRefreshLayout.finishRefresh();
                     }
                 },2000);
             }
@@ -54,7 +54,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        pullToRefreshLayout.setFinish(State.LOADMORE);
+                        pullToRefreshLayout.finishLoadMore();
                     }
                 },2000);
             }

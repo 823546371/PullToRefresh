@@ -22,7 +22,7 @@ public class ScrollViewActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        p.setFinish(State.REFRESH);
+                        p.finishRefresh();
                     }
                 },2000);
             }
@@ -32,7 +32,7 @@ public class ScrollViewActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        p.setFinish(State.LOADMORE);
+                        p.finishLoadMore();
                     }
                 },2000);
             }
