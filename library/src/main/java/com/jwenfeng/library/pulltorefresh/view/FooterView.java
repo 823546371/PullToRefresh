@@ -38,7 +38,7 @@ public interface FooterView {
     void normal();
 
     /**
-     *
+     * 返回当前视图
      * */
     View getView();
 
