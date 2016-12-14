@@ -4,6 +4,10 @@
 
 目前支持：`ScrollView `，`ListView`，`WebView`，`RecyclerView`。
 
+## 效果图
+
+![](http://qiniu.jwenfeng.com/01/PullToRefresh.gif)
+
 ## 基本用法
 
 ### 1、添加 Gradle 依赖
