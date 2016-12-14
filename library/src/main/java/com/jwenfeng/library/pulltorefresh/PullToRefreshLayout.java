@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.jwenfeng.library.pulltorefresh.util.DisplayUtil;
 import com.jwenfeng.library.pulltorefresh.view.FooterView;
 import com.jwenfeng.library.pulltorefresh.view.HeadRefreshView;
 import com.jwenfeng.library.pulltorefresh.view.HeadView;
@@ -67,10 +68,10 @@ public class PullToRefreshLayout extends FrameLayout {
     }
 
     private void cal() {
-        head_height = Dp2Px(getContext(), HEAD_HEIGHT);
-        foot_height = Dp2Px(getContext(), FOOT_HEIGHT);
-        head_height_2 = Dp2Px(getContext(), HEAD_HEIGHT * 2);
-        foot_height_2 = Dp2Px(getContext(), FOOT_HEIGHT * 2);
+        head_height = DisplayUtil.dp2Px(getContext(), HEAD_HEIGHT);
+        foot_height = DisplayUtil.dp2Px(getContext(), FOOT_HEIGHT);
+        head_height_2 = DisplayUtil.dp2Px(getContext(), HEAD_HEIGHT * 2);
+        foot_height_2 = DisplayUtil.dp2Px(getContext(), FOOT_HEIGHT * 2);
     }
 
     private void init() {
@@ -79,14 +80,6 @@ public class PullToRefreshLayout extends FrameLayout {
         if (count != 1) {
             new IllegalArgumentException("child only can be one");
         }
-    }
-
-    public void setHeaderView(HeadView mHeaderView) {
-        this.mHeaderView = mHeaderView;
-    }
-
-    public void setFooterView(FooterView mFooterView) {
-        this.mFooterView = mFooterView;
     }
 
     @Override
@@ -288,33 +281,21 @@ public class PullToRefreshLayout extends FrameLayout {
                 if (state == State.REFRESH) {
                     isRefresh = false;
                     mHeaderView.normal();
-//                    if (refreshListener != null) {
-//                        refreshListener.finish();
-//                    }
 
                 } else {
                     isLoadMore = false;
                     mFooterView.normal();
-//                    if (refreshListener != null) {
-//                        refreshListener.finishLoadMore();
-//                    }
                 }
             }
         });
     }
 
-    public void setFinish(@State.REFRESH_STATE int state) {
+    private void setFinish(@State.REFRESH_STATE int state) {
         if (state == State.REFRESH) {
             if (mHeaderView != null && mHeaderView.getView().getLayoutParams().height > 0 && isRefresh) {
                 setFinish(head_height, state);
             }
         } else {
-            //这里因为canLoadMore不能真正的标志能不能加载更多,比如:在loadMore回调里调用
-            /**
-             *   refreshLayout.setLoadMore(false);
-             *  refreshLayout.setFinish(State.LOADMORE);
-             *  会出现问题
-             */
             if (mFooterView != null && mFooterView.getView().getLayoutParams().height > 0 && isLoadMore) {
                 setFinish(foot_height, state);
             }
@@ -326,18 +307,130 @@ public class PullToRefreshLayout extends FrameLayout {
     }
 
 
-    public static int Dp2Px(Context context, float dp) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
+    /**
+     * 结束刷新
+     * */
+    public void finishRefresh(){
+        setFinish(State.REFRESH);
     }
 
-    public static int Px2Dp(Context context, float px) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (px / scale + 0.5f);
+    /**
+     * 结束加载更多
+     * */
+    public void finishLoadMore(){
+        setFinish(State.LOADMORE);
     }
 
-    public static int sp2px(Context context, float spValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (spValue * fontScale + 0.5f);
+    /**
+     * 设置是否启用加载更多
+     * */
+    public void setCanLoadMore(boolean canLoadMore) {
+        this.canLoadMore = canLoadMore;
     }
+
+    /**
+     * 设置是下拉刷新头部
+     * @param mHeaderView 需实现 HeadView 接口
+     * */
+    public void setHeaderView(HeadView mHeaderView) {
+        this.mHeaderView = mHeaderView;
+    }
+
+    /**
+     * 设置是下拉刷新尾部
+     * @param mFooterView 需实现 FooterView 接口
+     * */
+    public void setFooterView(FooterView mFooterView) {
+        this.mFooterView = mFooterView;
+    }
+
+
+    /**
+     * 设置刷新控件的高度
+     * @param dp 单位为dp
+     */
+    public void setHeadHeight(int dp){
+        head_height = DisplayUtil.dp2Px(getContext(),dp);
+    }
+
+    /**
+     * 设置加载更多控件的高度
+     * @param dp 单位为dp
+     */
+    public void setFootHeight(int dp){
+        foot_height = DisplayUtil.dp2Px(getContext(),dp);
+    }
+
+    /**
+     * 同时设置加载更多控件和刷新控件的高度
+     * @param dp 单位为dp
+     */
+    public void setAllHeight(int dp){
+        head_height = DisplayUtil.dp2Px(getContext(),dp);
+        foot_height = DisplayUtil.dp2Px(getContext(),dp);
+    }
+
+    /**
+     * 同时设置加载更多控件和刷新控件的高度
+     * @param refresh  刷新控件的高度 单位为dp
+     * @param loadMore 加载控件的高度 单位为dp
+     */
+    public void setAllHeight(int refresh,int loadMore){
+        head_height = DisplayUtil.dp2Px(getContext(),refresh);
+        foot_height = DisplayUtil.dp2Px(getContext(),loadMore);
+    }
+
+    /**
+     * 设置刷新控件的下拉的最大高度 且必须大于本身控件的高度  最佳为2倍
+     * @param dp 单位为dp
+     */
+    public void setMaxHeadHeight(int dp){
+        if(head_height >= DisplayUtil.dp2Px(getContext(),dp)){
+            return;
+        }
+        head_height_2 = DisplayUtil.dp2Px(getContext(),dp);
+    }
+
+    /**
+     * 设置加载更多控件的上拉的最大高度 且必须大于本身控件的高度  最佳为2倍
+     * @param dp 单位为dp
+     */
+    public void setMaxFootHeight(int dp){
+        if(foot_height >= DisplayUtil.dp2Px(getContext(),dp)){
+            return;
+        }
+        foot_height_2 = DisplayUtil.dp2Px(getContext(),dp);
+    }
+
+    /**
+     * 同时设置加载更多控件和刷新控件的最大高度 且必须大于本身控件的高度  最佳为2倍
+     * @param dp 单位为dp
+     */
+    public void setAllMaxHeight(int dp){
+        if(head_height >= DisplayUtil.dp2Px(getContext(),dp)){
+            return;
+        }
+        if(foot_height >= DisplayUtil.dp2Px(getContext(),dp)){
+            return;
+        }
+        head_height_2 = DisplayUtil.dp2Px(getContext(),dp);
+        foot_height_2 = DisplayUtil.dp2Px(getContext(),dp);
+    }
+
+    /**
+     * 同时设置加载更多控件和刷新控件的最大高度 且必须大于本身控件的高度  最佳为2倍
+     * @param refresh  刷新控件下拉的最大高度 单位为dp
+     * @param loadMore 加载控件上拉的最大高度 单位为dp
+     */
+    public void setAllMaxHeight(int refresh,int loadMore){
+        if(head_height >= DisplayUtil.dp2Px(getContext(),refresh)){
+            return;
+        }
+        if(foot_height >= DisplayUtil.dp2Px(getContext(),loadMore)){
+            return;
+        }
+        head_height_2 = DisplayUtil.dp2Px(getContext(),refresh);
+        foot_height_2 = DisplayUtil.dp2Px(getContext(),loadMore);
+    }
+
 }

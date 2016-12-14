@@ -22,7 +22,7 @@ public interface HeadView {
      * 回调的精度,单位为px
      *
      * @param progress 当前高度
-     * @param all      总高度   为默认高度的2倍
+     * @param all      总高度
      */
     void progress(float progress, float all);
 

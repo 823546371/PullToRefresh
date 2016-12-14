@@ -64,7 +64,6 @@ public class HeadRefreshView extends FrameLayout implements HeadView {
         if (progress >= all-10){
             tv.setText("松开刷新");
         }else{
-            Log.d("1111","progress"+progress + "all"+all);
             tv.setText("下拉加载");
         }
     }
