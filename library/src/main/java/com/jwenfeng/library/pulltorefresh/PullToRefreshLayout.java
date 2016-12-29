@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -48,6 +49,9 @@ public class PullToRefreshLayout extends FrameLayout {
     private boolean isRefresh;
     private boolean isLoadMore;
 
+    //滑动的最小距离
+    private int mTouchSlope;
+
     private BaseRefreshListener refreshListener;
 
     public void setRefreshListener(BaseRefreshListener refreshListener) {
@@ -72,6 +76,8 @@ public class PullToRefreshLayout extends FrameLayout {
         foot_height = DisplayUtil.dp2Px(getContext(), FOOT_HEIGHT);
         head_height_2 = DisplayUtil.dp2Px(getContext(), HEAD_HEIGHT * 2);
         foot_height_2 = DisplayUtil.dp2Px(getContext(), FOOT_HEIGHT * 2);
+
+        mTouchSlope = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     }
 
     private void init() {
@@ -127,14 +133,14 @@ public class PullToRefreshLayout extends FrameLayout {
                 float dy = currentY - mCurrentY;
                 if (canRefresh) {
                     boolean canChildScrollUp = canChildScrollUp();
-                    if (dy > 0 && !canChildScrollUp) {
+                    if (dy > mTouchSlope && !canChildScrollUp) {
                         mHeaderView.begin();
                         return true;
                     }
                 }
                 if (canLoadMore) {
                     boolean canChildScrollDown = canChildScrollDown();
-                    if (dy < 0 && !canChildScrollDown) {
+                    if (dy < mTouchSlope && !canChildScrollDown) {
                         mFooterView.begin();
                         return true;
                     }

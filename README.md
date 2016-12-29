@@ -4,6 +4,10 @@
 
 目前支持：`ScrollView `，`ListView`，`WebView`，`RecyclerView`。
 
+## 版本记录
+
+v1.0.2 修复了滑动最小距离判断
+
 ## 效果图
 
 ![](http://qiniu.jwenfeng.com/01/PullToRefresh.gif)
@@ -14,7 +18,7 @@
 > 目前只支持 Android Studio
 
 ``` gradle
-compile 'com.jwenfeng.pulltorefresh:library:1.0.1'
+compile 'com.jwenfeng.pulltorefresh:library:1.0.2'
 ```
 
 ### 2、布局文件
