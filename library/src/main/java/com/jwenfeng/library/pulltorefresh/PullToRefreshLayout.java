@@ -140,7 +140,7 @@ public class PullToRefreshLayout extends FrameLayout {
                 }
                 if (canLoadMore) {
                     boolean canChildScrollDown = canChildScrollDown();
-                    if (dy < mTouchSlope && !canChildScrollDown) {
+                    if (dy < -mTouchSlope && !canChildScrollDown) {
                         mFooterView.begin();
                         return true;
                     }
