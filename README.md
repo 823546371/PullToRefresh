@@ -22,7 +22,7 @@
 > 目前只支持 Android Studio
 
 ``` gradle
-compile 'com.jwenfeng.pulltorefresh:library：1.0.3'
+compile 'com.jwenfeng.pulltorefresh:library:1.0.3'
 ```
 
 ### 2、布局文件
