@@ -10,7 +10,7 @@
 修复了滑动最小距离判断
 
 #### v1.1.0
-新增了空数据，加载中以及网络错误的页面
+新增了空数据，加载中以及网络错误的3种状态页面
 
 ## 效果图
 
@@ -22,7 +22,7 @@
 > 目前只支持 Android Studio
 
 ``` gradle
-compile 'com.jwenfeng.pulltorefresh:library:1.0.3'
+compile 'com.jwenfeng.pulltorefresh:library:1.1.0'
 ```
 
 ### 2、布局文件
