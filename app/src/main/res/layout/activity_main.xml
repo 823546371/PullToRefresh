@@ -41,4 +41,13 @@
         android:text="WebView"
         />
 
+    <TextView
+        android:id="@+id/main_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:text="空数据，网络错误及加载中页面"
+        android:background="#ddd"
+        />
+
 </LinearLayout>

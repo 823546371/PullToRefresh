@@ -2,15 +2,18 @@ package com.jwenfeng.library.pulltorefresh;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.jwenfeng.library.R;
 import com.jwenfeng.library.pulltorefresh.util.DisplayUtil;
 import com.jwenfeng.library.pulltorefresh.view.FooterView;
 import com.jwenfeng.library.pulltorefresh.view.HeadRefreshView;
@@ -54,6 +57,10 @@ public class PullToRefreshLayout extends FrameLayout {
 
     private BaseRefreshListener refreshListener;
 
+
+    private View loadingView, errorView, emptyView;
+    private int loading = R.layout.layout_loading, empty = R.layout.layout_empty, error = R.layout.layout_error;
+
     public void setRefreshListener(BaseRefreshListener refreshListener) {
         this.refreshListener = refreshListener;
     }
@@ -68,6 +75,12 @@ public class PullToRefreshLayout extends FrameLayout {
 
     public PullToRefreshLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PullToRefreshLayout, defStyleAttr, 0);
+        error = a.getResourceId(R.styleable.PullToRefreshLayout_view_error, error);
+        loading = a.getResourceId(R.styleable.PullToRefreshLayout_view_loading, loading);
+        empty = a.getResourceId(R.styleable.PullToRefreshLayout_view_empty, empty);
+
         init();
     }
 
@@ -155,7 +168,7 @@ public class PullToRefreshLayout extends FrameLayout {
         switch (event.getAction()) {
             case MotionEvent.ACTION_MOVE:
                 mCurrentY = event.getY();
-                float dura = (mCurrentY - mTouchY)/3.0f;
+                float dura = (mCurrentY - mTouchY) / 3.0f;
                 if (dura > 0 && canRefresh) {
                     dura = Math.min(head_height_2, dura);
                     dura = Math.max(0, dura);
@@ -177,7 +190,7 @@ public class PullToRefreshLayout extends FrameLayout {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 float currentY = event.getY();
-                final int dy1 = (int) (currentY - mTouchY)/3;
+                final int dy1 = (int) (currentY - mTouchY) / 3;
                 if (dy1 > 0 && canRefresh) {
                     if (dy1 >= head_height) {
                         createAnimatorTranslationY(State.REFRESH,
@@ -276,7 +289,6 @@ public class PullToRefreshLayout extends FrameLayout {
         anim.start();
     }
 
-
     /**
      * 结束下拉刷新
      */
@@ -312,40 +324,143 @@ public class PullToRefreshLayout extends FrameLayout {
         void onSuccess();
     }
 
+    private void showLoadingView() {
+        if (loadingView == null) {
+            loadingView = LayoutInflater.from(getContext()).inflate(loading, null);
+            LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            addView(loadingView, layoutParams);
+        } else {
+            loadingView.setVisibility(VISIBLE);
+        }
+    }
+
+    private void showEmptyView() {
+        if (emptyView == null) {
+            emptyView = LayoutInflater.from(getContext()).inflate(empty, null);
+            LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            addView(emptyView, layoutParams);
+        } else {
+            emptyView.setVisibility(VISIBLE);
+        }
+    }
+
+    private void showErrorView() {
+        if (errorView == null) {
+            errorView = LayoutInflater.from(getContext()).inflate(error, null);
+            LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            addView(errorView, layoutParams);
+        } else {
+            errorView.setVisibility(VISIBLE);
+        }
+    }
+
+    private void hideView(View view) {
+        if (view != null)
+            view.setVisibility(GONE);
+    }
+
+    private void switchView(int status) {
+        switch (status) {
+            case ViewStatus.CONTENT_STATUS:
+                hideView(loadingView);
+                hideView(emptyView);
+                hideView(errorView);
+
+                mChildView.setVisibility(VISIBLE);
+                break;
+            case ViewStatus.LOADING_STATUS:
+                hideView(mChildView);
+                hideView(emptyView);
+                hideView(errorView);
+
+                showLoadingView();
+                break;
+            case ViewStatus.EMPTY_STATUS:
+                hideView(mChildView);
+                hideView(loadingView);
+                hideView(errorView);
+
+                showEmptyView();
+                break;
+            case ViewStatus.ERROR_STATUS:
+                hideView(mChildView);
+                hideView(loadingView);
+                hideView(emptyView);
+
+                showErrorView();
+                break;
+            default:
+                hideView(loadingView);
+                hideView(emptyView);
+                hideView(errorView);
+
+                mChildView.setVisibility(VISIBLE);
+                break;
+        }
+    }
+
+    /**
+     * 设置展示view (error,empty,loading)
+     * */
+    public void showView(@ViewStatus.VIEW_STATUS int status) {
+        switchView(status);
+    }
+
+    /**
+     * 获取view (error,empty,loading)
+     * */
+    public View getView(@ViewStatus.VIEW_STATUS int status) {
+        switch (status) {
+            case ViewStatus.EMPTY_STATUS:
+                return emptyView;
+            case ViewStatus.LOADING_STATUS:
+                return loadingView;
+            case ViewStatus.ERROR_STATUS:
+                return errorView;
+            case ViewStatus.CONTENT_STATUS:
+                return mChildView;
+        }
+        return null;
+    }
 
     /**
      * 结束刷新
-     * */
-    public void finishRefresh(){
+     */
+    public void finishRefresh() {
         setFinish(State.REFRESH);
     }
 
     /**
      * 结束加载更多
-     * */
-    public void finishLoadMore(){
+     */
+    public void finishLoadMore() {
         setFinish(State.LOADMORE);
     }
 
     /**
      * 设置是否启用加载更多
-     * */
+     */
     public void setCanLoadMore(boolean canLoadMore) {
         this.canLoadMore = canLoadMore;
     }
 
     /**
      * 设置是下拉刷新头部
+     *
      * @param mHeaderView 需实现 HeadView 接口
-     * */
+     */
     public void setHeaderView(HeadView mHeaderView) {
         this.mHeaderView = mHeaderView;
     }
 
     /**
      * 设置是下拉刷新尾部
+     *
      * @param mFooterView 需实现 FooterView 接口
-     * */
+     */
     public void setFooterView(FooterView mFooterView) {
         this.mFooterView = mFooterView;
     }
@@ -353,90 +468,99 @@ public class PullToRefreshLayout extends FrameLayout {
 
     /**
      * 设置刷新控件的高度
+     *
      * @param dp 单位为dp
      */
-    public void setHeadHeight(int dp){
-        head_height = DisplayUtil.dp2Px(getContext(),dp);
+    public void setHeadHeight(int dp) {
+        head_height = DisplayUtil.dp2Px(getContext(), dp);
     }
 
     /**
      * 设置加载更多控件的高度
+     *
      * @param dp 单位为dp
      */
-    public void setFootHeight(int dp){
-        foot_height = DisplayUtil.dp2Px(getContext(),dp);
+    public void setFootHeight(int dp) {
+        foot_height = DisplayUtil.dp2Px(getContext(), dp);
     }
 
     /**
      * 同时设置加载更多控件和刷新控件的高度
+     *
      * @param dp 单位为dp
      */
-    public void setAllHeight(int dp){
-        head_height = DisplayUtil.dp2Px(getContext(),dp);
-        foot_height = DisplayUtil.dp2Px(getContext(),dp);
+    public void setAllHeight(int dp) {
+        head_height = DisplayUtil.dp2Px(getContext(), dp);
+        foot_height = DisplayUtil.dp2Px(getContext(), dp);
     }
 
     /**
      * 同时设置加载更多控件和刷新控件的高度
+     *
      * @param refresh  刷新控件的高度 单位为dp
      * @param loadMore 加载控件的高度 单位为dp
      */
-    public void setAllHeight(int refresh,int loadMore){
-        head_height = DisplayUtil.dp2Px(getContext(),refresh);
-        foot_height = DisplayUtil.dp2Px(getContext(),loadMore);
+    public void setAllHeight(int refresh, int loadMore) {
+        head_height = DisplayUtil.dp2Px(getContext(), refresh);
+        foot_height = DisplayUtil.dp2Px(getContext(), loadMore);
     }
 
     /**
      * 设置刷新控件的下拉的最大高度 且必须大于本身控件的高度  最佳为2倍
+     *
      * @param dp 单位为dp
      */
-    public void setMaxHeadHeight(int dp){
-        if(head_height >= DisplayUtil.dp2Px(getContext(),dp)){
+    public void setMaxHeadHeight(int dp) {
+        if (head_height >= DisplayUtil.dp2Px(getContext(), dp)) {
             return;
         }
-        head_height_2 = DisplayUtil.dp2Px(getContext(),dp);
+        head_height_2 = DisplayUtil.dp2Px(getContext(), dp);
     }
 
     /**
      * 设置加载更多控件的上拉的最大高度 且必须大于本身控件的高度  最佳为2倍
+     *
      * @param dp 单位为dp
      */
-    public void setMaxFootHeight(int dp){
-        if(foot_height >= DisplayUtil.dp2Px(getContext(),dp)){
+    public void setMaxFootHeight(int dp) {
+        if (foot_height >= DisplayUtil.dp2Px(getContext(), dp)) {
             return;
         }
-        foot_height_2 = DisplayUtil.dp2Px(getContext(),dp);
+        foot_height_2 = DisplayUtil.dp2Px(getContext(), dp);
     }
 
     /**
      * 同时设置加载更多控件和刷新控件的最大高度 且必须大于本身控件的高度  最佳为2倍
+     *
      * @param dp 单位为dp
      */
-    public void setAllMaxHeight(int dp){
-        if(head_height >= DisplayUtil.dp2Px(getContext(),dp)){
+    public void setAllMaxHeight(int dp) {
+        if (head_height >= DisplayUtil.dp2Px(getContext(), dp)) {
             return;
         }
-        if(foot_height >= DisplayUtil.dp2Px(getContext(),dp)){
+        if (foot_height >= DisplayUtil.dp2Px(getContext(), dp)) {
             return;
         }
-        head_height_2 = DisplayUtil.dp2Px(getContext(),dp);
-        foot_height_2 = DisplayUtil.dp2Px(getContext(),dp);
+        head_height_2 = DisplayUtil.dp2Px(getContext(), dp);
+        foot_height_2 = DisplayUtil.dp2Px(getContext(), dp);
     }
 
     /**
      * 同时设置加载更多控件和刷新控件的最大高度 且必须大于本身控件的高度  最佳为2倍
+     *
      * @param refresh  刷新控件下拉的最大高度 单位为dp
      * @param loadMore 加载控件上拉的最大高度 单位为dp
      */
-    public void setAllMaxHeight(int refresh,int loadMore){
-        if(head_height >= DisplayUtil.dp2Px(getContext(),refresh)){
+    public void setAllMaxHeight(int refresh, int loadMore) {
+        if (head_height >= DisplayUtil.dp2Px(getContext(), refresh)) {
             return;
         }
-        if(foot_height >= DisplayUtil.dp2Px(getContext(),loadMore)){
+        if (foot_height >= DisplayUtil.dp2Px(getContext(), loadMore)) {
             return;
         }
-        head_height_2 = DisplayUtil.dp2Px(getContext(),refresh);
-        foot_height_2 = DisplayUtil.dp2Px(getContext(),loadMore);
+        head_height_2 = DisplayUtil.dp2Px(getContext(), refresh);
+        foot_height_2 = DisplayUtil.dp2Px(getContext(), loadMore);
     }
+
 
 }

@@ -6,11 +6,15 @@
 
 ## 版本记录
 
-v1.0.2 修复了滑动最小距离判断
+#### v1.0.3
+修复了滑动最小距离判断
+
+#### v1.1.0
+新增了空数据，加载中以及网络错误的页面
 
 ## 效果图
 
-![](http://qiniu.jwenfeng.com/01/PullToRefresh.gif)
+![](Screenshot/PullToRefresh.gif)
 
 ## 基本用法
 
@@ -116,6 +120,57 @@ public interface HeadView {
 ### 5、其他
 
 可以设置下拉刷新和上拉加载控件的高度和拉取的最大高度，默认为60dp，最大拉取为120dp,可自行设置。
+
+
+### 6、v1.1.0 新增自定义3中状态页面
+
+#### 截图
+![](Screenshot/view01.png)
+![](Screenshot/view02.png)
+![](Screenshot/view03.png)
+
+
+#### 用法
+
+###### XML
+
+``` xml
+<com.jwenfeng.library.pulltorefresh.PullToRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:view_error="@layout/layout_error"
+    app:view_empty="@layout/layout_empty"
+    app:view_loading="@layout/layout_loading">
+
+</com.jwenfeng.library.pulltorefresh.PullToRefreshLayout>
+```
+
+app:view_error    网络错误页面
+
+app:view_empty    空数据页面
+
+app:view_loading  加载中页面
+
+该三个属性可以不填写，默认样式为上图所示，可以自定义
+
+
+###### java用法
+
+``` java
+pullToRefreshLayout.showView(ViewStatus.LOADING_STATUS);
+```
+设置需要显示的视图
+``` java
+// 获取页面
+View error = pullToRefreshLayout.getView(ViewStatus.ERROR_STATUS);
+```
+获取所需要的视图view
+
+## 注意 一定要在调用了设置相应的视图之后才可以调用获取页面，否则view为空
+
 
 ## License
 

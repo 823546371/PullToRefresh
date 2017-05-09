@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
 import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.jwenfeng.library.pulltorefresh.State;
+import com.jwenfeng.library.pulltorefresh.ViewStatus;
 import com.jwenfeng.pulltorefresh.adapter.RecyclerViewAdapter;
 
 import java.util.ArrayList;
@@ -30,9 +31,30 @@ public class RecyclerViewActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         list = new ArrayList<>();
+
         for (int i = 0; i < 10; i++) {
             list.add("PullToRefreshLayout"+i);
         }
+
+       new Handler().postDelayed(new Runnable() {
+           @Override
+           public void run() {
+               pullToRefreshLayout.showView(ViewStatus.LOADING_STATUS);
+               new Handler().postDelayed(new Runnable() {
+                   @Override
+                   public void run() {
+                       pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                       new Handler().postDelayed(new Runnable() {
+                           @Override
+                           public void run() {
+                               pullToRefreshLayout.showView(ViewStatus.ERROR_STATUS);
+                           }
+                       },2000);
+                   }
+               },2000);
+           }
+       },2000);
+
         adapter = new RecyclerViewAdapter(list);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

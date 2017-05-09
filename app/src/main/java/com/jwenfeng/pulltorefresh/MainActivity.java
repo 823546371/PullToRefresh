@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView lstv,recycler,web,scroll;
+    private TextView lstv,recycler,web,scroll,view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,11 +20,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recycler = (TextView) findViewById(R.id.main_recycler_view);
         web = (TextView) findViewById(R.id.main_web_view);
         scroll = (TextView) findViewById(R.id.main_scroll_view);
+        view = (TextView) findViewById(R.id.main_view);
 
         lstv.setOnClickListener(this);
         recycler.setOnClickListener(this);
         web.setOnClickListener(this);
         scroll.setOnClickListener(this);
+        view.setOnClickListener(this);
 
     }
 
@@ -42,6 +44,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.main_web_view:
                 startActivity(new Intent(this,WebviewActivity.class));
+                break;
+            case R.id.main_view:
+                startActivity(new Intent(this,ViewActivity.class));
                 break;
         }
     }

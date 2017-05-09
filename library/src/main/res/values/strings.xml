@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Library</string>
+
+    <string name="net_error">网络未连接</string>
+    <string name="error">您的设备网络不稳定\n请检查后点击图标重试</string>
+    <string name="empty">暂无数据</string>
+    <string name="loading">加载中...</string>
 </resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PullToRefreshLayout">
+        <attr name="view_error" format="reference" />
+        <attr name="view_empty" format="reference" />
+        <attr name="view_loading" format="reference" />
+    </declare-styleable>
+</resources>
