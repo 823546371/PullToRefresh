@@ -135,7 +135,7 @@ public class PullToRefreshLayout extends FrameLayout {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (!canLoadMore && !canRefresh) return super.onInterceptTouchEvent(ev);
-        if (isRefresh || isLoadMore) return true;
+        //if (isRefresh || isLoadMore) return true;
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mTouchY = ev.getY();
@@ -237,7 +237,6 @@ public class PullToRefreshLayout extends FrameLayout {
         if (mChildView == null) {
             return false;
         }
-
         return ViewCompat.canScrollVertically(mChildView, 1);
     }
 

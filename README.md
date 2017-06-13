@@ -12,6 +12,10 @@
 #### v1.1.0
 新增了空数据，加载中以及网络错误的3种状态页面
 
+#### v1.2.0
+1、修复了ypf168326 [issue](https://github.com/823546371/PullToRefresh/issues/2) 并添加了例子
+2、修复了刷新加载期间不能滑动的问题
+
 ## 效果图
 
 ![](Screenshot/PullToRefresh.gif)
@@ -22,7 +26,7 @@
 > 目前只支持 Android Studio
 
 ``` gradle
-compile 'com.jwenfeng.pulltorefresh:library:1.1.0'
+compile 'com.jwenfeng.pulltorefresh:library:1.2.0'
 ```
 
 ### 2、布局文件
