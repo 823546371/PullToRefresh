@@ -16,9 +16,12 @@
 1、修复了ypf168326 [issue](https://github.com/823546371/PullToRefresh/issues/2) 并添加了例子
 2、修复了刷新加载期间不能滑动的问题
 
+#### v1.2.5
+新增自定义不用每次都设置头部和底部demo
+
 ## 效果图
 
-![](Screenshot/PullToRefresh.gif)
+<img src = "Screenshot/PullToRefresh.gif" width="600px" />
 
 ## 基本用法
 
@@ -121,6 +124,7 @@ public interface HeadView {
 
 上拉加载更多用法和下拉刷新类似，具体参考 [LoadMoreView.java](https://github.com/823546371/PullToRefresh/blob/master/library/src/main/java/com/jwenfeng/library/pulltorefresh/view/LoadMoreView.java)
 
+不用每次都设置头部和底部啦，可以继承PullToRefreshLayout，具体参考 [NormalPullToRefreshLayout](https://github.com/823546371/PullToRefresh/blob/master/app/src/main/java/com/jwenfeng/pulltorefresh/view/NormalPullToRefreshLayout.java)
 ### 5、其他
 
 可以设置下拉刷新和上拉加载控件的高度和拉取的最大高度，默认为60dp，最大拉取为120dp,可自行设置。
@@ -129,9 +133,9 @@ public interface HeadView {
 ### 6、v1.1.0 新增自定义3中状态页面
 
 #### 截图
-![](Screenshot/view01.png)
-![](Screenshot/view02.png)
-![](Screenshot/view03.png)
+<img src = "Screenshot/view01.png" width="600px" />
+<img src = "Screenshot/view02.png" width="600px" />
+<img src = "Screenshot/view03.png" width="600px" />
 
 
 #### 用法
