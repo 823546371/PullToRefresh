@@ -35,7 +35,7 @@ public class PullToRefreshLayout extends FrameLayout {
     private FooterView mFooterView;
     private View mChildView;
 
-    private static final long ANIM_TIME = 250;
+    private static final long ANIM_TIME = 300;
     private static int HEAD_HEIGHT = 60;
     private static int FOOT_HEIGHT = 60;
 
@@ -99,19 +99,28 @@ public class PullToRefreshLayout extends FrameLayout {
         if (count != 1) {
             new IllegalArgumentException("child only can be one");
         }
+
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
+    protected void onFinishInflate() {
+        super.onFinishInflate();
         mChildView = getChildAt(0);
         addHeadView();
         addFooterView();
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+    }
+
     private void addHeadView() {
         if (mHeaderView == null) {
             mHeaderView = new HeadRefreshView(getContext());
+        }else{
+            removeView(mHeaderView.getView());
         }
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
         mHeaderView.getView().setLayoutParams(layoutParams);
@@ -123,6 +132,8 @@ public class PullToRefreshLayout extends FrameLayout {
     private void addFooterView() {
         if (mFooterView == null) {
             mFooterView = new LoadMoreView(getContext());
+        }else{
+            removeView(mFooterView.getView());
         }
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
         layoutParams.gravity = Gravity.BOTTOM;
@@ -250,7 +261,8 @@ public class PullToRefreshLayout extends FrameLayout {
     /**
      * 创建动画
      */
-    public void createAnimatorTranslationY(@State.REFRESH_STATE final int state, final int start, final int purpose, final CallBack callBack) {
+    public void createAnimatorTranslationY(@State.REFRESH_STATE final int state, final int start,
+                                           final int purpose, final CallBack callBack) {
         final ValueAnimator anim;
         anim = ValueAnimator.ofInt(start, purpose);
         anim.setDuration(ANIM_TIME);
@@ -425,6 +437,21 @@ public class PullToRefreshLayout extends FrameLayout {
         return null;
     }
 
+    public void autoRefresh(){
+        createAnimatorTranslationY(State.REFRESH,
+                0, head_height,
+                new CallBack() {
+                    @Override
+                    public void onSuccess() {
+                        isRefresh = true;
+                        if (refreshListener != null) {
+                            refreshListener.refresh();
+                        }
+                        mHeaderView.loading();
+                    }
+                });
+    }
+
     /**
      * 结束刷新
      */
@@ -444,6 +471,13 @@ public class PullToRefreshLayout extends FrameLayout {
      */
     public void setCanLoadMore(boolean canLoadMore) {
         this.canLoadMore = canLoadMore;
+    }
+
+    /**
+     * 设置是否启用下拉刷新
+     */
+    public void setCanRefresh(boolean canRefresh) {
+        this.canRefresh = canRefresh;
     }
 
     /**

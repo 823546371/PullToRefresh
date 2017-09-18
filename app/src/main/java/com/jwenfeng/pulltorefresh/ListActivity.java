@@ -34,12 +34,18 @@ public class ListActivity extends AppCompatActivity {
         adapter = new ListAdapter(this,list);
         lstv.setAdapter(adapter);
 
+        pullToRefreshLayout.autoRefresh();
+
         pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
             @Override
             public void refresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        for (int i = 0; i < 20; i++) {
+                            list.add("PullToRefreshLayout"+i);
+                        }
+                        adapter.notifyDataSetChanged();
                         pullToRefreshLayout.finishRefresh();
                     }
                 },2000);

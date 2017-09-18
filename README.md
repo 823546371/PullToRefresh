@@ -19,6 +19,10 @@
 #### v1.2.5
 新增自定义不用每次都设置头部和底部demo
 
+#### v1.2.6
+1、fix bug <br />
+2、新增自动刷新(autoRefresh),禁止刷新(canRefresh)
+
 ## 效果图
 
 <img src = "Screenshot/PullToRefresh.gif" width="600px" />
