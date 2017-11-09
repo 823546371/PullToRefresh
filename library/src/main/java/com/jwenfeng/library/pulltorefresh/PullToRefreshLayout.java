@@ -487,6 +487,7 @@ public class PullToRefreshLayout extends FrameLayout {
      */
     public void setHeaderView(HeadView mHeaderView) {
         this.mHeaderView = mHeaderView;
+        addHeadView();
     }
 
     /**
@@ -496,6 +497,7 @@ public class PullToRefreshLayout extends FrameLayout {
      */
     public void setFooterView(FooterView mFooterView) {
         this.mFooterView = mFooterView;
+        addFooterView();
     }
 
 

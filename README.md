@@ -23,6 +23,9 @@
 1、fix bug <br />
 2、新增自动刷新(autoRefresh),禁止刷新(canRefresh)
 
+#### v1.2.7
+1、fix issue#9 <br />
+
 ## 效果图
 
 <img src = "Screenshot/PullToRefresh.gif" width="600px" />
@@ -33,7 +36,7 @@
 > 目前只支持 Android Studio
 
 ``` gradle
-compile 'com.jwenfeng.pulltorefresh:library:1.2.5'
+compile 'com.jwenfeng.pulltorefresh:library:1.2.7'
 ```
 
 ### 2、布局文件
